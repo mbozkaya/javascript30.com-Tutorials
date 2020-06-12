@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>JS + CSS Clock</title>
+</head>
+
+<body>
+  <div class="clock-digit">
+    <div class="digit">12</div>
+    <div class="digit">
+      <div class="digit-in">3</div>
+      <div class="digit-in">9</div>
+    </div>
+    <div class="digit">6</div>
+  </div>
+  <div class="clock">
+    <div class="clock-face">
+      <div class="hand hour-hand"></div>
+      <div class="hand min-hand"></div>
+      <div class="hand second-hand"></div>
+    </div>
+  </div>
+
+
+  <style>
+    html {
+      background: #018DED url(https://unsplash.it/1500/1000?image=881&blur=5);
+      background-size: cover;
+      font-family: 'helvetica neue';
+      text-align: center;
+      font-size: 10px;
+    }
+
+    body {
+      margin: 0;
+      font-size: 2rem;
+      display: flex;
+      flex: 1;
+      min-height: 100vh;
+      align-items: center;
+    }
+
+    .clock {
+      margin-left: -1140px !important;
+      width: 30rem;
+      height: 30rem;
+      border: 20px solid white;
+      border-radius: 50%;
+      margin: 50px auto;
+      position: relative;
+      padding: 2rem;
+      box-shadow:
+        0 0 0 4px rgba(0, 0, 0, 0.1),
+        inset 0 0 0 3px #EFEFEF,
+        inset 0 0 10px black,
+        0 0 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .clock-face {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform: translateY(-3px);/* account for the height of the clock hands */
+    }
+
+    .hand {
+      width: 50%;
+      height: 6px;
+      background: black;
+      position: absolute;
+      top: 50%;
+      transform-origin: 100%;/* akrep yelkovan ve saniyeyi çemberin merkezine sabitler*/
+      transform: rotate(90deg);/* default olarak 90 derecelik açıdan başlar*/
+      transition: all 0.05s;
+      transition-timing-function: cubic-bezier(0.1, 2.7, 0.58, 1);
+    }
+
+    .clock-digit {
+      margin: 50px auto;
+      width: 37rem;
+      height: 38rem;
+      z-index: 9;
+      font-size: larger;
+      font-weight: bolder;
+      font-family: sans-serif;
+    }
+
+    .digit:nth-child(1) {
+      margin-bottom: 15rem;
+      vertical-align: top;
+    }
+
+    .digit:nth-child(2) {
+      margin-left: 36rem;
+      display: flex;
+    }
+
+    .digit:nth-child(3) {
+      margin-top: 15rem;
+    }
+
+    .digit-in:nth-child(1) {
+      display: inline;
+      margin-right: -370px;
+    }
+  </style>
+
+  <script>
+    //akrep yelkovan ve saniye elementleri seçilir
+    const secondHand = document.querySelector('.second-hand');
+    const minHand = document.querySelector('.min-hand');
+    const hourHand = document.querySelector('.hour-hand');
+
+    function setClock() {
+      const now = new Date();
+      //bir saniyeyin, bir dakikanın ve bir saatin 360 derece karşıkları bulunur.
+      const secondDeg = ((now.getSeconds()) * 6) + 90;
+      const minuteDeg = ((now.getMinutes()) * 6) + 90;
+      const hourDeg = (now.getHours() % 12 * 30) + 90;
+      //derece olarak döndürelecek şekilde transform styleına verilir.
+      secondHand.style.transform = `rotate(${secondDeg}deg)`;
+      minHand.style.transform = `rotate(${minuteDeg}deg)`;
+      hourHand.style.transform = `rotate(${hourDeg}deg)`;
+    }
+    //bir saniye aralıklarla setclock fonksiyonu tetiklenir.
+    setInterval(setClock, 1000);
+
+  </script>
+</body>
+
+</html>

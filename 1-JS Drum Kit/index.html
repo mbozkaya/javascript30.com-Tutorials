@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>JS Drum Kit</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+
+  <div class="keys">
+    <div data-key="65" class="key">
+      <kbd>A</kbd>
+      <span class="sound">clap</span>
+    </div>
+    <div data-key="83" class="key">
+      <kbd>S</kbd>
+      <span class="sound">hihat</span>
+    </div>
+    <div data-key="68" class="key">
+      <kbd>D</kbd>
+      <span class="sound">kick</span>
+    </div>
+    <div data-key="70" class="key">
+      <kbd>F</kbd>
+      <span class="sound">openhat</span>
+    </div>
+    <div data-key="71" class="key">
+      <kbd>G</kbd>
+      <span class="sound">boom</span>
+    </div>
+    <div data-key="72" class="key">
+      <kbd>H</kbd>
+      <span class="sound">ride</span>
+    </div>
+    <div data-key="74" class="key">
+      <kbd>J</kbd>
+      <span class="sound">snare</span>
+    </div>
+    <div data-key="75" class="key">
+      <kbd>K</kbd>
+      <span class="sound">tom</span>
+    </div>
+    <div data-key="76" class="key">
+      <kbd>L</kbd>
+      <span class="sound">tink</span>
+    </div>
+  </div>
+
+  <audio data-key="65" src="sounds/clap.wav"></audio>
+  <audio data-key="83" src="sounds/hihat.wav"></audio>
+  <audio data-key="68" src="sounds/kick.wav"></audio>
+  <audio data-key="70" src="sounds/openhat.wav"></audio>
+  <audio data-key="71" src="sounds/boom.wav"></audio>
+  <audio data-key="72" src="sounds/ride.wav"></audio>
+  <audio data-key="74" src="sounds/snare.wav"></audio>
+  <audio data-key="75" src="sounds/tom.wav"></audio>
+  <audio data-key="76" src="sounds/tink.wav"></audio>
+
+  <script>
+    //Tuşa basılma eventı oluşturuluyor ilk parametre, eventin ne tipte olacağını gösteriyor 'keydown' tuşa basma event tipi, ikinci parametere ise ilk parametrede tanımlanan event tipi gerçekleştiğine ne olacağının tanımlandığı fonksiyon tipinde parametre.
+    //aşağıda bir tuşa basıldığında tuşun keyCode'una karşılık data-key olan bir audio elementinin dom'da bulup eğer varsa elemente 'playing' classını eklemektedir.
+    window.addEventListener('keydown', function (e) {
+      const audioElement = document.querySelector(`audio[data-key="${e.keyCode}"]`);//Ses elementini getir
+      if (!audioElement)//Ses elementi null'sa devam etme
+        return;
+
+      const keyElement = document.querySelector(`div[data-key="${e.keyCode}"]`);//Harfin göründüğü key elementini getir
+      keyElement.classList.add('playing');//key elementine playing classını ekle
+
+      audioElement.currentTime = 0;//Tuşa her basıldığında sesin baştan başlaması için currentTime 0 olarak setleniyor. Anlamakta zorluk çekerseniz bu setlemeyi kapatarak deneyin
+      audioElement.play();//Sesi çal
+    });
+
+    //Playing class eklendikten sonra key classında style olarak tanımlanan 'transition: all 0.07s ease' cooldown süresi 0.07s olarak tanımlandı. Bu sürenin bitişinde çalışacak bir fonksiyon tanımlanıyor.
+    window.addEventListener('transitionend', function (e) {
+      if (e.propertyName === 'transform') {
+        e.target.classList.remove('playing');//Playing classını elementten kaldır.
+        console.log(e);
+      }
+    });
+
+  </script>
+
+
+</body>
+
+</html>
