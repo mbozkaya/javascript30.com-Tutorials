@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>HTML5 Canvas</title>
+</head>
+<body>
+<canvas id="draw" width="800" height="800"></canvas>
+<script>
+    const canvas = document.querySelector('#draw');
+    const ctx = canvas.getContext('2d');
+    //Full width ve heigth verilir
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    ctx.strokeStyle = '#BADA55';
+    //daire olarak setlenir
+    ctx.lineJoin='round';
+    ctx.lineCap='round';
+    //Renklerin üst üste binmesi
+    ctx.globalCompositeOperation='multiply';
+
+    let isDrawing = false;
+    let lastX=0;
+    let lastY=0;
+    let hue=0;
+    let direction=true;
+
+
+    function draw(e) {
+        //isDrawing değişkeni anahtar görevi görüyor açıksa işlem devam eder.
+        if(!isDrawing)return false;
+
+        console.log(e);
+        ctx.beginPath();
+        ctx.moveTo(lastX,lastY);
+        ctx.lineTo(e.offsetX,e.offsetY);
+        ctx.strokeStyle=`hsl(${hue},100%,50%)`;
+        ctx.stroke();
+
+        [lastX,lastY] = [e.offsetX,e.offsetY];
+        hue++;//rengi artır.
+
+        if(hue>360 ){
+            hue=0;
+        }
+
+        if(ctx.lineWidth>=360 || ctx.lineWidth<=1){
+            direction=!direction;
+        }
+        //kalınlık ve incelik
+        if(direction){
+            ctx.lineWidth ++;
+        } else{
+            ctx.lineWidth --;
+        }
+    }
+
+    canvas.addEventListener('mousemove',draw);
+    //mouse tıklandığında
+    canvas.addEventListener('mousedown',()=>{
+        isDrawing=true;
+        [lastX,lastY] = [this.offsetX,this.offsetY];
+    });
+    //mouse tıklaması bittiğinde 
+    canvas.addEventListener('mouseup',()=>isDrawing=false);
+    //mouse window dışındaysa
+    canvas.addEventListener('mouseout',()=>isDrawing=false);
+</script>
+
+<style>
+  html, body {
+    margin: 0;
+  }
+</style>
+
+</body>
+</html>
